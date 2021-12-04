@@ -34,9 +34,7 @@ class Board:
 def main():
     with open('./input') as f:
         content = f.readlines()
-        for line in content:
-            if(len(line) > 7):
-                randomNumbers = list(line.split('\n')[0])
-        matrix = np.array([ list(line.split('\n')[0]) for line in content])
+        data = content.split('\n\n')
+    print(data)
     
-    
+main()
