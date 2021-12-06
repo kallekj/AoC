@@ -13,51 +13,40 @@ class OceanFloor:
 
 
     def addVents(self, a, b):
-        (x1,y1) = a
-        (x2,y2) = b
 
-        if x1 == x2:
-            Ymax = max([y1, y2])
-            Ymin = min([y1, y2])
-            positions = [[x1, y] for y in range(Ymin, Ymax)]
-
-        if y1 == y2:
-            Xmax = max([x1, x2])
-            Xmin = min([x1, x2])
-            positions = [[x, y1] for x in range(Xmin, Xmax)]
-
-        if len(self.map) == 0:
-            for pos in positions:
-                floorPos = OceanFloorPos(pos[0], pos[1])
-                self.map.append(floorPos)
-                self.visitedPositions.append(floorPos.pos) 
-
-        else:
+        def searchVents(positions):
             for pos in positions:
                 if pos in self.visitedPositions:
-                    temp = np.array(self.visitedPositions)
-                    index = np.where(x==pos)
-                    print(index)
+                    index = self.visitedPositions.index(pos)
                     self.map[index].vents += 1
                 else:
                     floorPos = OceanFloorPos(pos[0], pos[1])
                     self.map.append(floorPos)
                     self.visitedPositions.append(floorPos.pos)
 
-        # if len(self.map) == 0:
-        #     for pos in positions:
-        #         floorPos = OceanFloorPos(pos[0], pos[1])
-        #         self.map.append(floorPos)
-        # else:
-        #     for i, pos in enumerate(positions):
-        #         for vent in self.map:
-        #             if vent.pos == pos:
-        #                 vent.vents += 1
-        #                 positions.pop(i)
+        (x1,y1) = a
+        (x2,y2) = b
 
-        #     for pos in positions:
-        #         floorPos = OceanFloorPos(pos[0], pos[1])
-        #         self.map.append(floorPos)
+        if x1 == x2:
+            Ymax = max([y1, y2])
+            Ymin = min([y1, y2])
+            positions = [[x1, y] for y in range(Ymin, Ymax+1)]
+            searchVents(positions)
+
+        elif y1 == y2:
+            Xmax = max([x1, x2])
+            Xmin = min([x1, x2])
+            positions = [[x, y1] for x in range(Xmin, Xmax+1)]
+            searchVents(positions)
+        
+        elif x1 == y1 and x2 == y2:
+            max12 = max([x1, x2])
+            min12 = min([x1, x2])
+            positions = [[x, x] for x in range(min12, max12+1)]
+            searchVents(positions)
+
+        elif x1 != x2 and y1 != y2:
+            pass
     
     def countDangerousPositions(self):
         numDangerousPositions = 0
@@ -69,7 +58,7 @@ class OceanFloor:
 def main():
     oceanFloor = OceanFloor()
 
-    with open('./testData') as f:
+    with open('./input') as f:
         content = f.readlines()
         tot = len(content)
         for i, line in enumerate(content):
@@ -79,7 +68,7 @@ def main():
             x2 = int(line[2])
             y2 = int(line[3])
             print("{}%".format(round(i/tot, 2)*100))
-            oceanFloor.addVents((x1,y2), (x2,y2))
+            oceanFloor.addVents((x1,y1), (x2,y2))
 
     print(oceanFloor.countDangerousPositions())
 
