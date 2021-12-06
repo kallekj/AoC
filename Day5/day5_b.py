@@ -39,6 +39,24 @@ class OceanFloor:
             positions = [[x, y1] for x in range(Xmin, Xmax+1)]
             searchVents(positions)
         
+        elif x1 == y1 and x2 == y2:
+            max12 = max([x1, x2])
+            min12 = min([x1, x2])
+            positions = [[x, x] for x in range(min12, max12+1)]
+            searchVents(positions)
+
+        elif (x1 == y1 or x1 != y1) and (x2 == y2 or x2 != y2):
+            if x1 > x2 and y1 < y2:
+                positions = [[x,y] for x,y in zip(range(x1, x2 - 1, -1), range(y1, y2 + 1))]
+            elif y1 > y2 and x1 < x2:
+                positions = [[x,y] for x,y in zip(range(x1, x2 + 1), range(y1, y2 - 1, -1))]
+            elif x1 > x2 and y1 > y2:
+                positions = [[x,y] for x,y in zip(range(x1, x2 - 1, -1), range(y1, y2 - 1, -1))]
+            elif x1 < x2 and y1 < y2:
+                positions = [[x,y] for x,y in zip(range(x1, x2 + 1), range(y1, y2 + 1))]
+
+            searchVents(positions)
+    
     def countDangerousPositions(self):
         numDangerousPositions = 0
         for pos in self.map:
