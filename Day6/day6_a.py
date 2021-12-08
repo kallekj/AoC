@@ -21,7 +21,7 @@ class Fish:
         return fish
 
 def main():
-    with open('./testData') as f:
+    with open('./input') as f:
         content = f.readlines()
         days = [int(day) for day in content[0].split(',')]
         
@@ -35,9 +35,9 @@ def main():
     currentDay = Day()
     school = [Fish(Day(currentDay, day)) for day in days]
 
-    for day in range(256):
+    for day in range(256):    
         newDay(school, currentDay)
         print(day)
-
+    
     print(len(school))
 main()
