@@ -19,6 +19,7 @@ class Board:
             return numMatrix
 
         self.matrix = initMatrix(matrix)
+        self.bingo = False
 
     def markNumber(self, val):
         flattenMatrix = self.matrix.flatten()
@@ -35,6 +36,7 @@ class Board:
                 if num.isVisited():
                     s += 1
                 if s == 5:
+                    self.bingo = True
                     return True
         return False
     
@@ -45,6 +47,7 @@ class Board:
                 if num.isVisited():
                     s += 1
                 if s == 5:
+                    self.bingo = True
                     return True
         return False
     
@@ -61,17 +64,23 @@ def parseMatrix(board):
     matrix = np.array([list(filter(None, row.split(' '))) for row in board])
     return matrix
 
+def countBingo(boards):
+    count = 0
+    for board in boards:
+        if board.bingo:
+            count += 1
+    return count
+
 def solve(randomNumbers, boards):
     for val in randomNumbers:
         for board in boards:
             board.markNumber(val)
-            if board.checkRow():
+            board.checkRow()
+            board.checkCol()
+            if countBingo(boards) == len(boards):
                 return board.countUnMarked() * val
                 
-            if board.checkCol():
-                return board.countUnMarked() * val
-                
-    return null
+    return None
 
 def main():
     with open('./input') as f:
