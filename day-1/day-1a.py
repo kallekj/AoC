@@ -6,11 +6,7 @@ with open('./input') as f:
 
 
 def adder(a, b):
-    try:
-        return int(a)+int(b)
-    except Exception as e:
-        print(e)
-        return 0
+    return a + b
 
 
 allElvs = list(map(lambda elf: reduce(adder, list(map(lambda food: int(food), filter(lambda cal: cal != '', elf.split('\n'))))), data.split('\n\n')))
