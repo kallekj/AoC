@@ -8,7 +8,7 @@
             "name": "Python: Current File",
             "type": "python",
             "request": "launch",
-            "program": "${workspaceRoot}/day-10/day-10b.py",
+            "program": "${workspaceRoot}/day-11/day-11b.py",
             "console": "integratedTerminal",
             "justMyCode": true
         }
