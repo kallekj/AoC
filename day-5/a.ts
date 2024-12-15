@@ -1,4 +1,3 @@
-import { isEmptyArray } from "../utils/array.ts";
 import { sum } from "../utils/math.ts";
 
 function parseRules(rawRules: string){

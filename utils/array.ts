@@ -111,3 +111,8 @@ export function getDiagonals<T>(matrix: T[][]): T[][] {
 
     return diagonals;
 }
+
+export function removeAt<T>(array: T[], i: number): T[] {
+    array.splice(i, 1)
+    return array;
+}
