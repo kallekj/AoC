@@ -22,59 +22,26 @@ export class ObstacleMab {
         name: Directions;
         value: number[]
     };
-    private guardPos: number[];
 
-    constructor(guardMap: string[][], endPos: number[], endDirection: { name: Directions, value: number[]}, guardPos: number[]){
+    constructor(guardMap: string[][], pos: number[], dir: { name: Directions, value: number[]}){
         this.map = guardMap;
         this.limits = { minCol: 0, minRow: 0, maxRow: this.map.length - 1, maxCol: this.map[0].length - 1 };
-        this.visited = new Set<string>();
-        this.pos = endPos;
-        this.direction = {
-            name: 'UP',
-            value: directions.UP
-        };
-        this.guardPos = guardPos;
+        this.visited = new Set();
+        this.pos = pos;
+        this.direction = dir;
         this.debugMap = Array.from(this.map);
-        
-
-        // Check up
-        if(endDirection.name === 'UP'){
-            this.direction = {
-                name: 'DOWN',
-                value: directions.DOWN
-            };
-        }
-        
-        // Check down
-        if(endDirection.name === 'DOWN'){
-            this.direction = {
-                name: 'UP',
-                value: directions.UP
-            };
-        }
-
-        // Check left
-        if(endDirection.name === 'LEFT'){
-            this.direction = {
-                name: 'RIGHT',
-                value: directions.RIGHT
-            };
-        }
-
-        // Check right
-        if(endDirection.name === 'RIGHT'){
-            this.direction = {
-                name: 'LEFT',
-                value: directions.LEFT
-            };
-        }
-
-        console.log('GuardMap Initialized - settings:');
-        console.log(JSON.stringify({ visited: this.visited.entries(), pos: this.pos, direction: this.direction, limits: this.limits }));
     }
 
     public get numVisited(){
         return this.visited.size;
+    }
+
+    public get currentPos() {
+        return this.pos;
+    }
+
+    public get currentDir() {
+        return this.direction;
     }
 
     public visitNextNode(){
@@ -87,6 +54,7 @@ export class ObstacleMab {
                     name: 'RIGHT',
                     value: directions.RIGHT,
                 };
+                return;
             } else {
                 return this.visit(newPos);
             }
@@ -101,6 +69,7 @@ export class ObstacleMab {
                     name: 'LEFT',
                     value: directions.LEFT,
                 };
+                return;
             } else {
                 return this.visit(newPos);
             }  
@@ -115,6 +84,7 @@ export class ObstacleMab {
                     name: 'UP',
                     value: directions.UP,
                 };
+                return;
             } else {
                 return this.visit(newPos);
             }  
@@ -137,9 +107,15 @@ export class ObstacleMab {
 
     private visit(newPos: number[]): boolean {
         if(this.isNewOutside(newPos)){
+            // console.log('Outside!');
             throw new Error('Outside!');
         }
-        const entry = `${newPos[0]},${newPos[1]}`;
+        const entry = `${newPos[0]},${newPos[1]},${this.currentDir.name}`;
+
+        if(this.visited.has(entry)) {
+            throw new Error('loop');
+        }
+
         if(!this.visited.has(entry)){
             this.addToDebugMap(newPos[0], newPos[1]);
             this.visited.add(entry);
@@ -153,7 +129,10 @@ export class ObstacleMab {
     }
 
     private isNewOutside(newPos: number[]): boolean {
-        return newPos[0] > this.limits.maxRow || newPos[0] < this.limits.minRow || newPos[1] > this.limits.maxCol || newPos[1] < this.limits.minCol;
+        if(newPos[0] > this.limits.maxRow || newPos[0] < this.limits.minRow || newPos[1] > this.limits.maxCol || newPos[1] < this.limits.minCol){
+            throw new Error('Outside!');
+        }
+        return false;
     }
 
     private getNewPos(){

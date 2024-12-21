@@ -8,8 +8,8 @@ const directions = {
 type Directions = keyof typeof directions;
 
 export class GuardMap {
-    private map: string[][];
     private visited: Set<string>;
+    private map: string[][];
     // public debugMap: string[][];
     private limits: {
         minRow: number;
@@ -18,18 +18,17 @@ export class GuardMap {
         maxCol: number; 
     }
     private pos: number[];
-    public direction: {
+    private direction: {
         name: Directions;
         value: number[]
     };
-    public guardPos: number[];
-    
+    private guardPos: number[];
 
     constructor(input: string){
         const rows = input.split('\n');
         this.map = rows.map(row => row.split(''));
         this.limits = { minCol: 0, minRow: 0, maxRow: this.map.length - 1, maxCol: this.map[0].length - 1 };
-        this.visited = new Set<string>();
+        this.visited = new Set();
         this.pos = [0,0];
         this.direction = {
             name: 'UP',
@@ -98,6 +97,22 @@ export class GuardMap {
 
         console.log('GuardMap Initialized - settings:');
         console.log(JSON.stringify({ visited: this.visited.entries(), pos: this.pos, direction: this.direction, limits: this.limits }));
+    }
+
+    public get visitedNodes(){
+        return this.visited;
+    }
+
+    public get mapMatrix(){
+        return this.map;
+    }
+
+    public get currentDirection(){
+        return this.direction;
+    }
+
+    public get guardPosition(){
+        return this.guardPos;
     }
 
     public get numNodes(){
